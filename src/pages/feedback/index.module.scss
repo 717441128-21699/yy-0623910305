@@ -1,0 +1,301 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(22, 93, 255, 0.05) 0%, $color-bg-page 100%);
+}
+
+.tabBar {
+  display: flex;
+  background: $color-bg-card;
+  padding: 0 $page-padding;
+  border-bottom: 1rpx solid $color-divider;
+
+  .tabItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $spacing-lg 0;
+    position: relative;
+
+    .text {
+      font-size: $font-size-md;
+      color: $color-text-secondary;
+      transition: all $transition-base;
+
+      &.active {
+        color: $color-primary;
+        font-weight: $font-weight-semibold;
+      }
+    }
+
+    .countBadge {
+      position: absolute;
+      top: $spacing-sm;
+      right: 30%;
+      padding: 0 12rpx;
+      min-width: 32rpx;
+      height: 32rpx;
+      line-height: 32rpx;
+      text-align: center;
+      background: $color-error;
+      color: $color-text-white;
+      font-size: 20rpx;
+      border-radius: $radius-round;
+    }
+
+    .indicator {
+      position: absolute;
+      bottom: 0;
+      width: 48rpx;
+      height: 6rpx;
+      background: $color-primary;
+      border-radius: $radius-xs;
+      opacity: 0;
+      transition: opacity $transition-base;
+
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.taskList {
+  padding: $spacing-md $page-padding;
+  padding-bottom: $spacing-xl;
+
+  .empty {
+    text-align: center;
+    padding: $spacing-xl 0;
+    color: $color-text-tertiary;
+    font-size: $font-size-sm;
+
+    .icon {
+      font-size: 80rpx;
+      margin-bottom: $spacing-md;
+      opacity: 0.5;
+    }
+  }
+
+  .statsTip {
+    padding: $spacing-md;
+    background: $color-tag-bg-blue;
+    border-radius: $radius-md;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-lg;
+    }
+
+    .text {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+
+      .highlight {
+        color: $color-primary;
+        font-weight: $font-weight-medium;
+      }
+    }
+  }
+}
+
+.feedbackModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 999;
+
+  .modalContent {
+    width: 100%;
+    background: $color-bg-card;
+    border-radius: $radius-xl $radius-xl 0 0;
+    padding: $spacing-xl $page-padding;
+    padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-xl});
+    max-height: 80vh;
+    overflow-y: auto;
+
+    .modalHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: $spacing-lg;
+
+      .title {
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: $color-text-primary;
+      }
+
+      .closeBtn {
+        width: 48rpx;
+        height: 48rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-size-lg;
+        color: $color-text-tertiary;
+      }
+    }
+
+    .taskSummary {
+      padding: $spacing-md;
+      background: $color-bg-page;
+      border-radius: $radius-md;
+      margin-bottom: $spacing-lg;
+
+      .label {
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+        margin-bottom: $spacing-xs;
+      }
+
+      .text {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+        line-height: $line-height-normal;
+      }
+    }
+
+    .sectionTitle {
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      margin-bottom: $spacing-md;
+      display: flex;
+      align-items: center;
+
+      .required {
+        color: $color-error;
+        margin-right: $spacing-xs;
+      }
+    }
+
+    .resultOptions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-md;
+      margin-bottom: $spacing-lg;
+
+      .option {
+        padding: $spacing-md;
+        border: 2rpx solid $color-border;
+        border-radius: $radius-md;
+        text-align: center;
+        transition: all $transition-base;
+
+        &:active {
+          transform: scale(0.98);
+        }
+
+        &.selected {
+          border-color: $color-primary;
+          background: $color-tag-bg-blue;
+        }
+
+        .icon {
+          font-size: 40rpx;
+          margin-bottom: $spacing-xs;
+        }
+
+        .label {
+          font-size: $font-size-sm;
+          color: $color-text-secondary;
+          font-weight: $font-weight-medium;
+
+          &.selected {
+            color: $color-primary;
+          }
+        }
+
+        &.truth .icon {
+          color: $color-error;
+        }
+
+        &.misinformation .icon {
+          color: $color-success;
+        }
+
+        &.communicated .icon {
+          color: $color-primary;
+        }
+
+        &.needs_response .icon {
+          color: $color-warning;
+        }
+      }
+    }
+
+    .textareaWrapper {
+      margin-bottom: $spacing-lg;
+
+      .textarea {
+        width: 100%;
+        height: 200rpx;
+        padding: $spacing-md;
+        background: $color-bg-page;
+        border-radius: $radius-md;
+        font-size: $font-size-md;
+        color: $color-text-primary;
+        line-height: $line-height-normal;
+        border: 2rpx solid transparent;
+        transition: all $transition-base;
+
+        &.focused {
+          border-color: $color-primary;
+          background: $color-bg-card;
+        }
+      }
+
+      .counter {
+        text-align: right;
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+        margin-top: $spacing-sm;
+      }
+    }
+
+    .modalActions {
+      display: flex;
+      gap: $spacing-md;
+
+      .btn {
+        @include button-reset;
+        flex: 1;
+        height: $button-height-lg;
+        border-radius: $radius-button;
+        font-size: $font-size-lg;
+        font-weight: $font-weight-semibold;
+        transition: all $transition-base;
+
+        &:active {
+          opacity: 0.9;
+          transform: scale(0.98);
+        }
+
+        &.secondary {
+          background: $color-bg-page;
+          color: $color-text-secondary;
+        }
+
+        &.primary {
+          background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+          color: $color-text-white;
+
+          &.disabled {
+            background: $color-text-disabled;
+          }
+        }
+      }
+    }
+  }
+}

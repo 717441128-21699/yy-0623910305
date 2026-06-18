@@ -1,0 +1,60 @@
+// ============================================
+// 主题配色变量（校园舆情监测系统）
+// ============================================
+
+// 品牌主题色：政务蓝，专业可信
+$color-primary: #165dff;
+$color-primary-light: #4080ff;
+$color-primary-dark: #0e42d2;
+
+// 功能色
+$color-success: #00b42a;
+$color-warning: #ff7d00;
+$color-error: #f53f3f;
+$color-info: #165dff;
+
+// 背景色
+$color-bg-page: #f5f6f7;
+$color-bg-card: #ffffff;
+$color-bg-hover: #f2f3f5;
+
+// 文本色
+$color-text-primary: #1d2129;
+$color-text-secondary: #4e5969;
+$color-text-tertiary: #86909c;
+$color-text-disabled: #c9cdd4;
+$color-text-white: #ffffff;
+
+// 边框色
+$color-border: #e5e6eb;
+$color-divider: #f2f3f5;
+
+// 业务语义色-热度等级
+$color-heat-high: #f53f3f;
+$color-heat-medium: #ff7d00;
+$color-heat-low: #ffaa00;
+$color-heat-normal: #00b42a;
+
+// 业务语义色-来源类型
+$color-source-campus: #722ed1;
+$color-source-external: #86909c;
+
+// 业务语义色-扩散范围
+$color-spread-wide: #f53f3f;
+$color-spread-medium: #ff7d00;
+$color-spread-small: #0fc6c2;
+
+// 业务语义色-处理状态
+$color-status-pending: #ff7d00;
+$color-status-processing: #165dff;
+$color-status-done: #00b42a;
+$color-status-closed: #86909c;
+
+// 标签背景色
+$color-tag-bg-red: rgba(245, 63, 63, 0.1);
+$color-tag-bg-orange: rgba(255, 125, 0, 0.1);
+$color-tag-bg-yellow: rgba(255, 170, 0, 0.1);
+$color-tag-bg-green: rgba(0, 180, 42, 0.1);
+$color-tag-bg-blue: rgba(22, 93, 255, 0.1);
+$color-tag-bg-purple: rgba(114, 46, 209, 0.1);
+$color-tag-bg-gray: rgba(134, 144, 156, 0.1);

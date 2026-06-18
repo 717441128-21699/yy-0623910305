@@ -1,0 +1,77 @@
+@use '@/styles/variables.scss' as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  line-height: 1.4;
+
+  &.pending {
+    background-color: $color-tag-bg-orange;
+    color: $color-status-pending;
+  }
+
+  &.processing {
+    background-color: $color-tag-bg-blue;
+    color: $color-status-processing;
+  }
+
+  &.done {
+    background-color: $color-tag-bg-green;
+    color: $color-status-done;
+  }
+
+  &.closed {
+    background-color: $color-tag-bg-gray;
+    color: $color-status-closed;
+  }
+
+  &.truth {
+    background-color: $color-tag-bg-red;
+    color: $color-heat-high;
+  }
+
+  &.misinformation {
+    background-color: $color-tag-bg-green;
+    color: $color-success;
+  }
+
+  &.communicated {
+    background-color: $color-tag-bg-blue;
+    color: $color-primary;
+  }
+
+  &.needs_response {
+    background-color: $color-tag-bg-orange;
+    color: $color-warning;
+  }
+
+  &.campus {
+    background-color: $color-tag-bg-purple;
+    color: $color-source-campus;
+  }
+
+  &.external {
+    background-color: $color-tag-bg-gray;
+    color: $color-source-external;
+  }
+
+  &.rising {
+    background-color: $color-tag-bg-red;
+    color: $color-heat-high;
+  }
+
+  &.stable {
+    background-color: $color-tag-bg-orange;
+    color: $color-heat-medium;
+  }
+
+  &.falling {
+    background-color: $color-tag-bg-green;
+    color: $color-heat-normal;
+  }
+}

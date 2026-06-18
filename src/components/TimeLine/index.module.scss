@@ -1,0 +1,111 @@
+@use '@/styles/variables.scss' as *;
+
+.timeline {
+  padding-left: $spacing-lg;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 14rpx;
+    top: 8rpx;
+    bottom: 8rpx;
+    width: 2rpx;
+    background: $color-border;
+  }
+
+  .item {
+    position: relative;
+    padding-bottom: $spacing-lg;
+
+    &:last-child {
+      padding-bottom: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .dot {
+      position: absolute;
+      left: -40rpx;
+      top: 8rpx;
+      width: 20rpx;
+      height: 20rpx;
+      border-radius: $radius-round;
+      background: $color-primary;
+      border: 4rpx solid $color-bg-card;
+      box-shadow: 0 0 0 2rpx $color-primary;
+      z-index: 1;
+
+      &.create {
+        background: $color-primary;
+        box-shadow: 0 0 0 2rpx $color-primary;
+      }
+
+      &.assign {
+        background: $color-warning;
+        box-shadow: 0 0 0 2rpx $color-warning;
+      }
+
+      &.feedback {
+        background: $color-success;
+        box-shadow: 0 0 0 2rpx $color-success;
+      }
+
+      &.close {
+        background: $color-text-tertiary;
+        box-shadow: 0 0 0 2rpx $color-text-tertiary;
+      }
+
+      &.update {
+        background: $color-info;
+        box-shadow: 0 0 0 2rpx $color-info;
+      }
+    }
+
+    .content {
+      background: $color-bg-page;
+      border-radius: $radius-md;
+      padding: $spacing-md;
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $spacing-sm;
+
+        .operator {
+          display: flex;
+          align-items: center;
+          gap: $spacing-xs;
+
+          .name {
+            font-size: $font-size-sm;
+            font-weight: $font-weight-medium;
+            color: $color-text-primary;
+          }
+
+          .role {
+            padding: 2rpx 8rpx;
+            background: $color-tag-bg-gray;
+            border-radius: $radius-xs;
+            font-size: 20rpx;
+            color: $color-text-secondary;
+          }
+        }
+
+        .time {
+          font-size: $font-size-xs;
+          color: $color-text-tertiary;
+        }
+      }
+
+      .text {
+        font-size: $font-size-sm;
+        color: $color-text-secondary;
+        line-height: $line-height-normal;
+      }
+    }
+  }
+}

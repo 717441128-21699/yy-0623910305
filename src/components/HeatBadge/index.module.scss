@@ -1,0 +1,32 @@
+@use '@/styles/variables.scss' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  line-height: 1.4;
+
+  &.high {
+    background-color: $color-tag-bg-red;
+    color: $color-heat-high;
+  }
+
+  &.medium {
+    background-color: $color-tag-bg-orange;
+    color: $color-heat-medium;
+  }
+
+  &.low {
+    background-color: $color-tag-bg-yellow;
+    color: $color-heat-low;
+  }
+
+  &.normal {
+    background-color: $color-tag-bg-green;
+    color: $color-heat-normal;
+  }
+}

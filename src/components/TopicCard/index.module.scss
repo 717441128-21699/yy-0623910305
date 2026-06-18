@@ -1,0 +1,178 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: $shadow-card-hover;
+  }
+
+  .heatIndicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6rpx;
+
+    &.high {
+      background: linear-gradient(90deg, $color-heat-high 0%, rgba(245, 63, 63, 0.3) 100%);
+    }
+
+    &.medium {
+      background: linear-gradient(90deg, $color-heat-medium 0%, rgba(255, 125, 0, 0.3) 100%);
+    }
+
+    &.low {
+      background: linear-gradient(90deg, $color-heat-low 0%, rgba(255, 170, 0, 0.3) 100%);
+    }
+
+    &.normal {
+      background: linear-gradient(90deg, $color-heat-normal 0%, rgba(0, 180, 42, 0.3) 100%);
+    }
+  }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: $spacing-md;
+    padding-top: $spacing-sm;
+
+    .title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      line-height: $line-height-tight;
+      flex: 1;
+      margin-right: $spacing-md;
+    }
+
+    .countBadge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: $spacing-sm $spacing-md;
+      background: $color-tag-bg-blue;
+      border-radius: $radius-md;
+      min-width: 100rpx;
+
+      .number {
+        font-size: $font-size-xxl;
+        font-weight: $font-weight-bold;
+        color: $color-primary;
+        line-height: 1;
+      }
+
+      .label {
+        font-size: $font-size-xs;
+        color: $color-text-secondary;
+        margin-top: 4rpx;
+      }
+    }
+  }
+
+  .indicators {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  .colleges {
+    margin-bottom: $spacing-md;
+
+    .label {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-xs;
+
+      .item {
+        padding: 4rpx 12rpx;
+        background: $color-tag-bg-gray;
+        color: $color-text-secondary;
+        font-size: $font-size-xs;
+        border-radius: $radius-sm;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-md;
+
+    .keyword {
+      padding: 4rpx 12rpx;
+      background: $color-tag-bg-blue;
+      color: $color-primary;
+      font-size: $font-size-xs;
+      border-radius: $radius-sm;
+      white-space: nowrap;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $spacing-md;
+    border-top: 1rpx solid $color-divider;
+
+    .trend {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      font-size: $font-size-sm;
+
+      .icon {
+        font-size: $font-size-md;
+      }
+
+      .rising {
+        color: $color-heat-high;
+      }
+
+      .stable {
+        color: $color-heat-medium;
+      }
+
+      .falling {
+        color: $color-heat-normal;
+      }
+    }
+
+    .time {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+
+  .appealFlag {
+    position: absolute;
+    top: $spacing-lg;
+    right: $spacing-lg;
+    padding: 4rpx 12rpx;
+    background: $color-tag-bg-purple;
+    color: $color-source-campus;
+    font-size: $font-size-xs;
+    border-radius: $radius-sm;
+    font-weight: $font-weight-medium;
+  }
+}
