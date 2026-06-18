@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import styles from './index.module.scss';
 import ClueCard from '@/components/ClueCard';
 import { useAppContext } from '@/store/AppContext';
-import { colleges, suggestedKeywords, generateId } from '@/utils';
+import { colleges, suggestedKeywords } from '@/utils';
 
 const ReportPage: React.FC = () => {
   const { clues, currentUser, addClue, refreshData } = useAppContext();
@@ -110,9 +110,8 @@ const ReportPage: React.FC = () => {
 
     console.log('[ReportPage] 提交线索');
     const college = colleges[collegeIndex];
-    const clueId = generateId();
 
-    addClue({
+    const returnedClueId = addClue({
       url: url.trim(),
       screenshots: screenshots.length > 0 ? screenshots : ['https://picsum.photos/id/1/400/600'],
       collegeId: college.id,
@@ -121,7 +120,7 @@ const ReportPage: React.FC = () => {
       initialJudgment: initialJudgment.trim()
     });
 
-    setNewClueId(clueId);
+    setNewClueId(returnedClueId);
     setShowSuccess(true);
 
     setUrl('');

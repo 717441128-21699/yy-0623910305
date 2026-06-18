@@ -16,7 +16,7 @@ interface AppContextType {
     role: 'student' | 'teacher' | 'counselor' | 'admin';
     collegeId?: string;
   };
-  addClue: (clue: Omit<Clue, 'id' | 'createdAt' | 'status' | 'reporterId' | 'reporterName' | 'reporterRole' | 'heatLevel' | 'sourceType' | 'spreadScope' | 'hasCampusAppeal'>) => void;
+  addClue: (clue: Omit<Clue, 'id' | 'createdAt' | 'status' | 'reporterId' | 'reporterName' | 'reporterRole' | 'heatLevel' | 'sourceType' | 'spreadScope' | 'hasCampusAppeal'>) => string;
   assignTask: (clueId: string, counselorId: string, counselorName: string, deadline: string) => void;
   submitFeedback: (taskId: string, result: 'truth' | 'misinformation' | 'communicated' | 'needs_response', note: string) => void;
   getClueById: (id: string) => Clue | undefined;
@@ -55,9 +55,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const addClue = useCallback((clueData) => {
     console.log('[AppContext] 新增线索:', clueData);
+    const newId = generateId();
     const newClue: Clue = {
       ...clueData,
-      id: generateId(),
+      id: newId,
       createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       status: 'pending',
       reporterId: currentUser.id,
@@ -69,6 +70,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       hasCampusAppeal: false
     };
     setClues(prev => [newClue, ...prev]);
+    return newId;
   }, [currentUser]);
 
   const assignTask = useCallback((clueId: string, counselorId: string, counselorName: string, deadline: string) => {
@@ -184,10 +186,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, [clues]);
 
   const refreshData = useCallback(() => {
-    console.log('[AppContext] 刷新数据');
-    setClues([...mockClues]);
-    setTopics([...mockTopics]);
-    setTasks([...mockFeedbackTasks]);
+    console.log('[AppContext] 刷新数据 - 保留用户操作数据');
+    setClues(prev => [...prev]);
+    setTopics(prev => [...prev]);
+    setTasks(prev => [...prev]);
   }, []);
 
   return (
