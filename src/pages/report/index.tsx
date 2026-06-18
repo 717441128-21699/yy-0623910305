@@ -320,7 +320,7 @@ const ReportPage: React.FC = () => {
             <Text className={styles.subtitle}>线索已成功上报，请等待处理</Text>
             <View className={styles.clueId}>
               <Text className={styles.label}>线索编号</Text>
-              <Text className={styles.id}>{newClueId.toUpperCase().slice(0, 12)}</Text>
+              <Text className={styles.id} selectable>{newClueId}</Text>
             </View>
             <View className={styles.actions}>
               <View className={classnames(styles.btn, styles.secondary)} onClick={handleCloseSuccess}>

@@ -181,6 +181,11 @@ const ClueDetailPage: React.FC = () => {
           </View>
           <Text className={styles.time}>{formatTime(clue.createdAt)}</Text>
         </View>
+
+        <View className={styles.clueIdRow}>
+          <Text className={styles.clueIdLabel}>线索编号</Text>
+          <Text className={styles.clueIdValue} selectable>{clue.id}</Text>
+        </View>
       </View>
 
       <View className={styles.section}>
@@ -248,6 +253,12 @@ const ClueDetailPage: React.FC = () => {
           <View className={styles.infoRow}>
             <Text className={styles.label}>指派处理人</Text>
             <Text className={styles.value}>{clue.assignedToName}</Text>
+          </View>
+        )}
+        {clue.deadline && (
+          <View className={styles.infoRow}>
+            <Text className={styles.label}>处理截止时间</Text>
+            <Text className={styles.value}>{formatTime(clue.deadline)}</Text>
           </View>
         )}
       </View>

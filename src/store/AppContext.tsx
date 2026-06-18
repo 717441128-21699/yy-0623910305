@@ -16,7 +16,7 @@ interface AppContextType {
     role: 'student' | 'teacher' | 'counselor' | 'admin';
     collegeId?: string;
   };
-  addClue: (clue: Omit<Clue, 'id' | 'createdAt' | 'status' | 'reporterId' | 'reporterName' | 'reporterRole' | 'heatLevel' | 'sourceType' | 'spreadScope' | 'hasCampusAppeal'>) => string;
+  addClue: (clue: Omit<Clue, 'id' | 'createdAt' | 'status' | 'reporterId' | 'reporterName' | 'reporterRole' | 'heatLevel' | 'sourceType' | 'spreadScope' | 'hasCampusAppeal' | 'topicId' | 'topicName'>) => string;
   assignTask: (clueId: string, counselorId: string, counselorName: string, deadline: string) => void;
   submitFeedback: (taskId: string, result: 'truth' | 'misinformation' | 'communicated' | 'needs_response', note: string) => void;
   getClueById: (id: string) => Clue | undefined;
@@ -41,6 +41,80 @@ interface AppProviderProps {
   children: ReactNode;
 }
 
+const aggregateClueToTopic = (clue: Omit<Clue, 'id' | 'createdAt' | 'status' | 'reporterId' | 'reporterName' | 'reporterRole' | 'heatLevel' | 'sourceType' | 'spreadScope' | 'hasCampusAppeal'> & { id: string; heatLevel: HeatLevel; spreadScope: SpreadScope; hasCampusAppeal: boolean; sourceType: SourceType; createdAt: string }, existingTopics: Topic[]): { topicId: string; topicName: string; updatedTopics: Topic[] } => {
+  let matchedTopic: Topic | null = null;
+  let maxMatchCount = 0;
+
+  for (const topic of existingTopics) {
+    const matchCount = clue.keywords.filter(kw =>
+      topic.keywords.some(tkw => tkw.includes(kw) || kw.includes(tkw))
+    ).length;
+    if (matchCount > maxMatchCount && matchCount >= 1) {
+      maxMatchCount = matchCount;
+      matchedTopic = topic;
+    }
+  }
+
+  if (matchedTopic) {
+    const allKeywords = Array.from(new Set([...matchedTopic.keywords, ...clue.keywords]));
+    const allColleges = Array.from(new Set([...matchedTopic.colleges, clue.collegeName]));
+    const clueCount = matchedTopic.clueCount + 1;
+
+    let newHeatLevel: HeatLevel = matchedTopic.heatLevel;
+    if (clueCount >= 8) newHeatLevel = 'high';
+    else if (clueCount >= 4) newHeatLevel = 'medium';
+    else if (clueCount >= 2) newHeatLevel = 'low';
+    else newHeatLevel = 'normal';
+
+    let newSpreadScope: SpreadScope = matchedTopic.spreadScope;
+    if (allColleges.length >= 4) newSpreadScope = 'wide';
+    else if (allColleges.length >= 2) newSpreadScope = 'medium';
+    else newSpreadScope = 'small';
+
+    const updatedTopics = existingTopics.map(t =>
+      t.id === matchedTopic!.id
+        ? {
+            ...t,
+            keywords: allKeywords,
+            colleges: allColleges,
+            clueCount,
+            heatLevel: newHeatLevel,
+            spreadScope: newSpreadScope,
+            hasCampusAppeal: t.hasCampusAppeal || clue.hasCampusAppeal,
+            latestAt: clue.createdAt,
+            trend: 'rising' as const
+          }
+        : t
+    );
+
+    return {
+      topicId: matchedTopic.id,
+      topicName: matchedTopic.name,
+      updatedTopics
+    };
+  }
+
+  const newTopic: Topic = {
+    id: generateId(),
+    name: clue.keywords[0] ? `${clue.keywords[0]}相关讨论` : `新话题_${dayjs().format('MMDDHHmm')}`,
+    keywords: clue.keywords.length > 0 ? clue.keywords : [clue.initialJudgment.slice(0, 6)],
+    clueCount: 1,
+    heatLevel: 'normal',
+    spreadScope: 'small',
+    hasCampusAppeal: clue.hasCampusAppeal,
+    colleges: [clue.collegeName],
+    createdAt: clue.createdAt,
+    latestAt: clue.createdAt,
+    trend: 'stable'
+  };
+
+  return {
+    topicId: newTopic.id,
+    topicName: newTopic.name,
+    updatedTopics: [newTopic, ...existingTopics]
+  };
+};
+
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [clues, setClues] = useState<Clue[]>(mockClues);
   const [topics, setTopics] = useState<Topic[]>(mockTopics);
@@ -56,11 +130,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const addClue = useCallback((clueData) => {
     console.log('[AppContext] 新增线索:', clueData);
     const newId = generateId();
-    const newClue: Clue = {
-      ...clueData,
+    const createdAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+    const baseClue = {
       id: newId,
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      status: 'pending',
+      createdAt,
+      status: 'pending' as const,
       reporterId: currentUser.id,
       reporterName: currentUser.name,
       reporterRole: currentUser.role === 'student' ? 'student' : 'teacher',
@@ -69,9 +144,28 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       spreadScope: 'small' as SpreadScope,
       hasCampusAppeal: false
     };
+
+    const fullClueForAggregation = {
+      ...clueData,
+      ...baseClue
+    };
+
+    const { topicId, topicName, updatedTopics } = aggregateClueToTopic(
+      fullClueForAggregation,
+      topics
+    );
+
+    const newClue: Clue = {
+      ...clueData,
+      ...baseClue,
+      topicId,
+      topicName
+    };
+
+    setTopics(updatedTopics);
     setClues(prev => [newClue, ...prev]);
     return newId;
-  }, [currentUser]);
+  }, [currentUser, topics]);
 
   const assignTask = useCallback((clueId: string, counselorId: string, counselorName: string, deadline: string) => {
     console.log('[AppContext] 派单:', { clueId, counselorId, counselorName, deadline });
@@ -97,7 +191,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setTasks(prev => [newTask, ...prev]);
     setClues(prev => prev.map(c =>
       c.id === clueId
-        ? { ...c, status: 'processing', assignedTo: counselorId, assignedToName: counselorName, assignedAt: dayjs().format('YYYY-MM-DD HH:mm:ss') }
+        ? {
+            ...c,
+            status: 'processing',
+            assignedTo: counselorId,
+            assignedToName: counselorName,
+            assignedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            deadline
+          }
         : c
     ));
   }, [clues, currentUser]);
@@ -107,15 +208,24 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
 
+    const completedAt = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
     setTasks(prev => prev.map(t =>
       t.id === taskId
-        ? { ...t, status: 'completed', result, note, completedAt: dayjs().format('YYYY-MM-DD HH:mm:ss') }
+        ? { ...t, status: 'completed', result, note, completedAt }
         : t
     ));
 
     setClues(prev => prev.map(c =>
       c.id === task.clueId
-        ? { ...c, status: 'done', feedbackResult: result, feedbackNote: note, feedbackAt: dayjs().format('YYYY-MM-DD HH:mm:ss'), feedbackBy: currentUser.id }
+        ? {
+            ...c,
+            status: 'done',
+            feedbackResult: result,
+            feedbackNote: note,
+            feedbackAt: completedAt,
+            feedbackBy: currentUser.id
+          }
         : c
     ));
   }, [tasks, currentUser]);
@@ -149,19 +259,20 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     ];
 
     if (clue.assignedAt && clue.assignedToName) {
+      const deadlineText = clue.deadline ? `，截止时间：${dayjs(clue.deadline).format('MM月DD日 HH:mm')}` : '';
       logs.push({
         id: generateId(),
         type: 'assign',
         operatorId: 'admin',
         operatorName: '宣传部老师',
         operatorRole: '管理员',
-        content: `指派给 ${clue.assignedToName} 核实`,
+        content: `指派给 ${clue.assignedToName} 核实${deadlineText}`,
         createdAt: clue.assignedAt
       });
     }
 
     if (clue.feedbackAt && clue.feedbackResult && clue.feedbackNote) {
-      const resultMap = {
+      const resultMap: Record<string, string> = {
         truth: '属实',
         misinformation: '误传',
         communicated: '已沟通',

@@ -25,15 +25,21 @@ const FeedbackPage: React.FC = () => {
   const [feedbackNote, setFeedbackNote] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
+  const canViewAllTasks = currentUser.role === 'admin' || currentUser.role === 'teacher';
+
   const pendingTasks = useMemo(() => {
-    return tasks.filter(t => t.status === 'pending' && t.assignedTo === currentUser.id)
-      .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
-  }, [tasks, currentUser.id]);
+    const filtered = canViewAllTasks
+      ? tasks.filter(t => t.status === 'pending')
+      : tasks.filter(t => t.status === 'pending' && t.assignedTo === currentUser.id);
+    return filtered.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+  }, [tasks, currentUser.id, canViewAllTasks]);
 
   const completedTasks = useMemo(() => {
-    return tasks.filter(t => t.status === 'completed' && t.assignedTo === currentUser.id)
-      .sort((a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime());
-  }, [tasks, currentUser.id]);
+    const filtered = canViewAllTasks
+      ? tasks.filter(t => t.status === 'completed')
+      : tasks.filter(t => t.status === 'completed' && t.assignedTo === currentUser.id);
+    return filtered.sort((a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime());
+  }, [tasks, currentUser.id, canViewAllTasks]);
 
   const displayTasks = activeTab === 'pending' ? pendingTasks : completedTasks;
 

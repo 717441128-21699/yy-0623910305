@@ -99,6 +99,28 @@
       color: $color-text-tertiary;
     }
   }
+
+  .clueIdRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    background: $color-bg-page;
+    border-radius: $radius-sm;
+
+    .clueIdLabel {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+
+    .clueIdValue {
+      font-size: $font-size-xs;
+      color: $color-primary;
+      font-weight: $font-weight-medium;
+      font-family: monospace;
+    }
+  }
 }
 
 .section {

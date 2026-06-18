@@ -39,6 +39,7 @@ export interface Clue {
   assignedTo?: string;
   assignedToName?: string;
   assignedAt?: string;
+  deadline?: string;
 }
 
 export interface Topic {
